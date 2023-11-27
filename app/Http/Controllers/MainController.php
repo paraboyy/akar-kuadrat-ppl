@@ -63,18 +63,27 @@ class MainController extends Controller
             $awal_api = microtime(true);
 
             $apiUrl = env('API_URL'); // Ambil URL dari file .env
+            $input = (int) $log->angka_input;
 
             try {
-                $response = Http::post($apiUrl, [$log->angka_input]);
-
+                $response = Http::post($apiUrl, ['bilangan' => $input]);
                 if ($response->successful()) {
-                    $hasilKuadrat = $response->json('hasil_kuadrat');
-                    echo "Hasil akar kuadrat dari " . $log->angka_input . " adalah: " . $hasilKuadrat;
+                    $res = $response->json('hasil_kuadrat');
+                    $hasil = $res['hasil_kuadrat'];
+                    $resultMessage = "Hasil akar kuadrat dari " . $log->angka_input . " adalah: " . $hasil;
+                    // Menyimpan nilai
+                    $log->angka_output = $hasil;
                 } else {
                     $error = $response->json('error');
-                    echo "Permintaan gagal. Error: " . $error;
+                    $resultMessage = "Permintaan gagal. Error: " . implode(', ', $error);
+
                 }
+
+                // Menampilkan pesan hasil
+                echo $resultMessage;
+
             } catch (Exception $e) {
+
                 echo '<h3>Gagal mengakses API</h3>
                         <form action="home.php" method="post">
                             <button type="submit" name="back">BACK TO DASHBOARD</button>
@@ -84,8 +93,17 @@ class MainController extends Controller
             //Akhir excution API
             $akhir_api = microtime(true);
             $lama = $akhir_api - $awal_api;
+            $log->lama = $lama;
+            $log->save();
         }
 
         return redirect()->route('home');
+    }
+
+    public function keluar(Request $req) {
+        Auth::logout();
+        $req->session()->invalidate();
+        $req->session()->regenerateToken();
+        return redirect()->intended('/');
     }
 }

@@ -29,4 +29,6 @@ Route::middleware(['guest'])->group(function() {
 Route::middleware(['auth'])->group(function() {
     Route::get ('/home', [MainController::class, 'home'])->name('home');
     Route::post('/calculate', [MainController::class, 'calculate'])->name('calculate');
+    Route::post('/keluar', [MainController::class, 'keluar'])        ->name('keluar');
 });
+

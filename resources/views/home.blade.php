@@ -92,12 +92,52 @@
         <center><button type="submit" name="delete">DELETE RIWAYAT</button></center>
     </form>
 
+    <form class="w-full" action="{{ route('keluar') }}" method="post">
+        @csrf
+        <center>
+            <button type="submit">
+                Keluar
+            </button>
+        </center>
+    </form>
+
     <script>
         function submitAkarKuadrat(tipe) {
             console.log(tipe);
             document.getElementById('tipe').value = tipe; // Mengubah nilai input dengan ID 'tipe'
             document.getElementById('calculateForm').submit(); // Melakukan submit form
         }
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sortButton = document.querySelector("#sortNIM");
+        const table = document.querySelector("table");
+        let ascending = true;
+
+        sortButton.addEventListener("click", () => {
+            const rows = Array.from(table.rows).slice(1); // Dapatkan semua baris kecuali header
+            rows.sort((a, b) => {
+                const nimA = a.cells[1].textContent;
+                const nimB = b.cells[1].textContent;
+
+                if (ascending) {
+                    return nimA.localeCompare(nimB);
+                } else {
+                    return nimB.localeCompare(nimA);
+                }
+            });
+
+            // Hapus semua baris dari tabel
+            rows.forEach(row => table.deleteRow(row.rowIndex));
+
+            // Tambahkan baris-baris yang sudah diurutkan
+            rows.forEach(row => table.appendChild(row));
+
+            // Toggle status pengurutan
+            ascending = !ascending;
+        });
+    });
     </script>
 
 </body>

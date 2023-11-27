@@ -11,17 +11,27 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            [
-                'name' => '2005551101',
-                'email' => '2005551101',
-                'password' => Hash::make('2005551101'),
-            ],
-            [
-                'name' => '2005551091',
-                'email' => '2005551091',
-                'password' => Hash::make('2005551091'),
-            ],
-        ]);
+        // Generate data range from 2005551001 to 2005551200
+        $data = [];
+        for ($i = 1001; $i <= 1200; $i++) {
+            $userData = [
+                'name' => '200555' . $i,
+                'email' => '200555' . $i,
+                'password' => Hash::make('200555' . $i),
+            ];
+            $data[] = $userData;
+        }
+
+        for ($i = 1001; $i <= 1200; $i++) {
+            $userData = [
+                'name' => '210555' . $i,
+                'email' => '210555' . $i,
+                'password' => Hash::make('210555' . $i),
+            ];
+            $data[] = $userData;
+        }
+
+        // Insert the generated data into the 'users' table
+        DB::table('users')->insert($data);
     }
 }
